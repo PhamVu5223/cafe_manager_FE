@@ -1,15 +1,13 @@
-name: Deploy Flutter Web to Vercel
+name: CI Flutter
 
 on:
   push:
     branches: [master]
-
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  pull_request:
+    branches: [master]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,12 +20,3 @@ jobs:
       - run: flutter pub get
 
       - run: flutter build web --release
-
-      - name: Them vercel.json (SPA)
-        run: echo '{"rewrites":[{"source":"/(.*)","destination":"/index.html"}]}' > build/web/vercel.json
-
-      - name: Cai Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Deploy len Vercel (production)
-        run: vercel deploy build/web --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
